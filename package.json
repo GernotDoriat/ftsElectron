@@ -1,8 +1,8 @@
 {
-	"name": "xoyondo-csv",
+	"name": "fulltextsearch",
 	"version": "0.0.1",
 	"private": true,
-	"description": "Sveltekit + Tailwind + Electron Xoyondo CSV application",
+	"description": "Sveltekit + Tailwind + Electron FullTextSearch Application",
 	"main": "src/electron.cjs",
 	"type": "module",
 	"author": "Gernot Doriat",

@@ -1,6 +1,6 @@
 {
 	"appId": "com.example.app",
-	"productName": "Xoyondo CSV",
+	"productName": "FullTextSearch",
 	"directories": {
 		"output": "dist"
 	},
