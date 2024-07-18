@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from "svelte";
 
+	import { getTextExtractor } from "office-text-extractor";
+
 	onMount(init);
 	function init() {
 		console.log("navigator", navigator);
@@ -17,7 +19,7 @@
 		if (costuraFiles && costuraFiles.length == 1) {
 			wolkensteinInput.value = "";
 			console.warn("reactOnCosturaFiles");
-			processFile(costuraFiles[0]);
+			//processFile(costuraFiles[0]);
 		}
 	}
 
@@ -27,13 +29,23 @@
 		if (wolkensteinFiles && wolkensteinFiles.length == 1) {
 			costuraInput.value = "";
 			console.warn("reactOnWolkensteinFiles");
-			processFile(wolkensteinFiles[0]);
+			//processFile(wolkensteinFiles[0]);
 		}
 	}
 
-	function processFile(file) {
+	/* async function processFile(file) {
 		console.warn("processFile", file);
-	}
+
+		// this function returns a new instance of the `TextExtractor` class, with the default
+		// extraction methods (docx, pptx, xlsx, pdf) registered.
+		const extractor = getTextExtractor();
+
+		// you can extract text from a file too, like so:
+
+		const text = await extractor.extractText({ input: file.path, type: "file" });
+
+		console.log(text);
+	} */
 
 	$: textRows = [];
 	let costuraInput, wolkensteinInput;
