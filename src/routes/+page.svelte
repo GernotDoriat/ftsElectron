@@ -33,7 +33,7 @@
 
 	async function processFile(file) {
 		console.warn("processFile", file);
-		const result = await window.electron.invoke("extract-text", file.path);
+		const result = await window.ipcElectron.invoke("extract-text", file.path);
 		console.warn("result", result);
 	}
 
