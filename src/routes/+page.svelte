@@ -15,61 +15,74 @@
 	$: reactOnCosturaFiles(costuraFiles);
 	function reactOnCosturaFiles() {
 		if (costuraFiles && costuraFiles.length == 1) {
-			wolkensteinInput.value = "";
 			console.warn("reactOnCosturaFiles");
 			processFile(costuraFiles[0]);
 		}
 	}
 
-	$: wolkensteinFiles = undefined;
-	$: reactOnWolkensteinFiles(wolkensteinFiles);
-	function reactOnWolkensteinFiles() {
-		if (wolkensteinFiles && wolkensteinFiles.length == 1) {
-			costuraInput.value = "";
-			console.warn("reactOnWolkensteinFiles");
-			processFile(wolkensteinFiles[0]);
+	async function processFile(file) {
+		text2 = "";
+		console.warn("processFile", file);
+		let result = await window.ipcElectron.invoke("extract-text", file.path);
+		console.warn("result", result);
+		proc(result.text);
+	}
+
+	$: text1 = "davor";
+	$: text2 = "danach";
+	let costuraInput;
+
+	let qrContent = "Beschluss";
+
+	function proc(text) {
+		let parts = text.split(qrContent);
+		if (parts.length > 2) {
+			text1 = parts[0];
+			text2 = parts[2];
 		}
 	}
-
-	async function processFile(file) {
-		console.warn("processFile", file);
-		const result = await window.ipcElectron.invoke("extract-text", file.path);
-		console.warn("result", result);
-	}
-
-	$: textRows = [];
-	let costuraInput, wolkensteinInput;
 </script>
 
 <div class="flex justify-between">
 	<img class="m-1 h-16 mt-2" src="tangoLibreLogoSquareTransparent.png" alt="logo" />
 	<div class="w-full">
-		<p class="m-5 text-3xl font-bold text-center text-orange-600">Xoyondo CSV Exporte auswerten</p>
+		<p class="m-5 text-3xl font-bold text-center text-orange-600">Volltext Suche</p>
 	</div>
 </div>
 
-<div class="m-2 border-2 border-neutral-300">
-	<p class="m-3 text-3xl font-bold">La Costura</p>
-	<div class="p-4">
-		<input bind:this={costuraInput} class="text-2xl" type="file" bind:files={costuraFiles} />
-	</div>
-</div>
-
-<div class="m-2 border-2 border-neutral-300">
-	<p class="m-3 text-3xl font-bold">Wolkenstein Milonga</p>
-	<div class="p-4">
-		<input bind:this={wolkensteinInput} class="text-2xl" type="file" accept=".csv" bind:files={wolkensteinFiles} />
-	</div>
-</div>
-{#if textRows.length > 0}
+<div class="flex">
 	<div class="m-2 border-2 border-neutral-300">
-		<div class="p-2">
-			{#each textRows as textRow}
-				<p>{textRow}</p>
-			{/each}
+		<div class="p-4">
+			<input bind:this={costuraInput} class="text-2xl" type="file" bind:files={costuraFiles} />
 		</div>
 	</div>
-{/if}
+
+	<div class=" m-2 border-2 border-neutral-300">
+		<div class="p-4 w-full">
+			<input class="p-2 text-3xl w-full focus:outline-0" type="text" placeholder="Suchbegriff eingeben oder einsetzen..." bind:value={qrContent} />
+		</div>
+	</div>
+</div>
+
+<div class="absolute left-2 bottom-2 right-2 p-1 border-2 border-neutral-300">
+	<div class="px-4 w-full h-40 overflow-y-scroll">
+		<p name="" id="" class="h-full">
+			{text1}
+		</p>
+	</div>
+
+	<div class="px-4 w-full text-red-700">
+		<p name="" id="" class="h-full">
+			{qrContent}
+		</p>
+	</div>
+
+	<div class="px-4 w-full h-40 overflow-y-scroll">
+		<p name="" id="" class="h-full">
+			{text2}
+		</p>
+	</div>
+</div>
 
 <style lang="postcss">
 	:global(html) {
