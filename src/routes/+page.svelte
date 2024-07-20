@@ -21,24 +21,24 @@
 	}
 
 	async function processFile(file) {
+		text1 = "";
 		text2 = "";
 		console.warn("processFile", file);
 		let result = await window.ipcElectron.invoke("extract-text", file.path);
-		console.warn("result", result);
-		proc(result.text);
+
+		processText(result.text);
 	}
+	let searchText = "Beschluss";
+	let fileInput;
 
 	$: text1 = "davor";
 	$: text2 = "danach";
-	let costuraInput;
 
-	let qrContent = "Beschluss";
-
-	function proc(text) {
-		let parts = text.split(qrContent);
-		if (parts.length > 2) {
+	function processText(text) {
+		let parts = text.split(searchText);
+		if (parts.length > 1) {
 			text1 = parts[0];
-			text2 = parts[2];
+			text2 = parts[1];
 		}
 	}
 </script>
@@ -53,13 +53,13 @@
 <div class="flex">
 	<div class="m-2 border-2 border-neutral-300">
 		<div class="p-4">
-			<input bind:this={costuraInput} class="text-2xl" type="file" bind:files={costuraFiles} />
+			<input bind:this={fileInput} class="text-2xl" type="file" bind:files={costuraFiles} />
 		</div>
 	</div>
 
 	<div class=" m-2 border-2 border-neutral-300">
 		<div class="p-4 w-full">
-			<input class="p-2 text-3xl w-full focus:outline-0" type="text" placeholder="Suchbegriff eingeben oder einsetzen..." bind:value={qrContent} />
+			<input class="p-2 text-3xl w-full focus:outline-0" type="text" placeholder="Suchbegriff eingeben oder einsetzen..." bind:value={searchText} />
 		</div>
 	</div>
 </div>
@@ -73,7 +73,7 @@
 
 	<div class="px-4 w-full text-red-700">
 		<p name="" id="" class="h-full">
-			{qrContent}
+			{searchText}
 		</p>
 	</div>
 

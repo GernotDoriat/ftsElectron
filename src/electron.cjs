@@ -108,21 +108,21 @@ ipcMain.on('to-main', (event, count) => {
 
 ipcMain.handle('extract-text', async (event, filePath) => {
 	try {
-		console.log('Received file path:', filePath)
+		//console.log('Received file path:', filePath)
 		const { getTextExtractor } = await import('office-text-extractor')
 		const fileBuffer = await fs.readFile(filePath)
-		console.log('File buffer:', fileBuffer)
+		//console.log('File buffer:', fileBuffer)
 
 		// Testen Sie die Struktur des Extraktors
 		const extractor = getTextExtractor(fileBuffer)
-		console.log('Extractor:', extractor)
+		//console.log('Extractor:', extractor)
 
 		if (typeof extractor.extractText !== 'function') {
 			throw new Error('extractText is not a function')
 		}
 
 		const text = await extractor.extractText({ input: fileBuffer, type: 'buffer' })
-		console.log('Extracted text:', text)
+		//console.log('Extracted text:', text)
 		return { success: true, text }
 	} catch (error) {
 		console.error('Error extracting text:', error)
