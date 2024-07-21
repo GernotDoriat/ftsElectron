@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from "svelte";
+	import Icon from "../components/Icon.svelte";
 
 	onMount(init);
 	function init() {
@@ -36,8 +37,8 @@
 	$: text1 = "davor";
 	$: text2 = "danach";
 
-	let indexOfSearch = 0;
-	let parts = [];
+	$: indexOfSearch = 0;
+	$: parts = [];
 
 	function processText(text) {
 		parts = text.split(searchText);
@@ -46,38 +47,29 @@
 		}
 	}
 	function showParts() {
+		console.warn(`showParts indexOfSearch = ${indexOfSearch}`);
 		text1 = parts[indexOfSearch];
 		text2 = parts[indexOfSearch + 1];
 	}
 
-	$: movement = "NEXT";
-	function move() {
-		if (movement == "NEXT") {
-			if (indexOfSearch < parts.length - 1) {
-				indexOfSearch++;
-				showParts();
-			} else {
-				movement = "PREV";
-			}
-		} else {
-			if (indexOfSearch > 0) {
-				indexOfSearch--;
-				showParts();
-			} else {
-				movement = "NEXT";
-			}
-		}
+	function moveUp() {
+		indexOfSearch--;
+		showParts();
+	}
+	function moveDown() {
+		indexOfSearch++;
+		showParts();
 	}
 </script>
 
+<!-- 
 <div class="flex justify-between">
 	<img class="m-1 h-16 mt-2" src="tangoLibreLogoSquareTransparent.png" alt="logo" />
 	<div class="w-full">
 		<p class="m-5 text-3xl font-bold text-center text-orange-600">Volltext Suche</p>
 	</div>
-	<button class=" absolute right-5 top-24 p-2 m-3 text-xl font-bold bg-orange-600 text-white" on:click={move}>{indexOfSearch + 1}</button>
 </div>
-
+ -->
 <div class="flex">
 	<div class="m-2 border-2 border-neutral-300">
 		<div class="p-4">
@@ -90,6 +82,19 @@
 			<input class="p-2 text-3xl w-full focus:outline-0" type="text" placeholder="Suchbegriff eingeben oder einsetzen..." bind:value={searchText} />
 		</div>
 	</div>
+
+	{#if costuraFiles}
+		<div class="m-8 p-2 flex gap-2 border-2 border-neutral-300">
+			{#if indexOfSearch > 0}
+				<button class="text-xl font-bold bg-orange-600 text-white" on:click={moveUp}><Icon id="arrowUp" /></button>
+			{/if}
+			<p class="text-4xl">{indexOfSearch + 1}</p>
+
+			{#if indexOfSearch < parts.length - 2}
+				<button class=" text-xl font-bold bg-orange-600 text-white" on:click={moveDown}> <Icon id="arrowDown" /></button>
+			{/if}
+		</div>
+	{/if}
 </div>
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2 border-neutral-300">
