@@ -23,6 +23,8 @@
 	async function processFile(file) {
 		text1 = "";
 		text2 = "";
+		indexOfSearch = 0;
+		parts = [];
 		console.warn("processFile", file);
 		let result = await window.ipcElectron.invoke("extract-text", file.path);
 
@@ -34,11 +36,36 @@
 	$: text1 = "davor";
 	$: text2 = "danach";
 
+	let indexOfSearch = 0;
+	let parts = [];
+
 	function processText(text) {
-		let parts = text.split(searchText);
+		parts = text.split(searchText);
 		if (parts.length > 1) {
-			text1 = parts[0];
-			text2 = parts[1];
+			showParts();
+		}
+	}
+	function showParts() {
+		text1 = parts[indexOfSearch];
+		text2 = parts[indexOfSearch + 1];
+	}
+
+	$: movement = "NEXT";
+	function move() {
+		if (movement == "NEXT") {
+			if (indexOfSearch < parts.length - 1) {
+				indexOfSearch++;
+				showParts();
+			} else {
+				movement = "PREV";
+			}
+		} else {
+			if (indexOfSearch > 0) {
+				indexOfSearch--;
+				showParts();
+			} else {
+				movement = "NEXT";
+			}
 		}
 	}
 </script>
@@ -48,6 +75,7 @@
 	<div class="w-full">
 		<p class="m-5 text-3xl font-bold text-center text-orange-600">Volltext Suche</p>
 	</div>
+	<button class=" absolute right-5 top-24 p-2 m-3 text-xl font-bold bg-orange-600 text-white" on:click={move}>{indexOfSearch + 1}</button>
 </div>
 
 <div class="flex">
