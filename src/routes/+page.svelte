@@ -108,7 +108,7 @@
 		</p>
 	</div>
 
-	<div class="px-4 w-full text-red-700">
+	<div class="px-4 w-full text-orange-600">
 		<p class="text-xl font-semibold">
 			{searchText}
 		</p>
