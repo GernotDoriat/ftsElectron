@@ -90,7 +90,7 @@
 			{:else}
 				<div class="w-8"></div>
 			{/if}
-			<p class="text-4xl">{indexOfSearch + 1}</p>
+			<p class="text-4xl font-semibold">{indexOfSearch + 1}</p>
 
 			{#if indexOfSearch < parts.length - 2}
 				<button class=" text-xl font-bold bg-orange-600 text-white" on:click={moveDown}> <Icon id="arrowDown" /></button>
@@ -109,7 +109,7 @@
 	</div>
 
 	<div class="px-4 w-full text-red-700">
-		<p name="" id="" class="h-full">
+		<p class="text-xl font-semibold">
 			{searchText}
 		</p>
 	</div>
