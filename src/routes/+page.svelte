@@ -71,33 +71,37 @@
 </div>
  -->
 <div class="flex">
-	<div class="m-2 border-2 border-neutral-300">
+	<div class="m-">
 		<div class="p-4">
 			<input bind:this={fileInput} class="text-2xl" type="file" bind:files={costuraFiles} />
 		</div>
 	</div>
 
-	<div class=" m-2 border-2 border-neutral-300">
-		<div class="p-4 w-full">
+	<div class=" m-2">
+		<div class="px-4 w-full">
 			<input class="p-2 text-3xl w-full focus:outline-0" type="text" placeholder="Suchbegriff eingeben oder einsetzen..." bind:value={searchText} />
 		</div>
 	</div>
 
 	{#if costuraFiles}
-		<div class="m-8 p-2 flex gap-2 border-2 border-neutral-300">
+		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if indexOfSearch > 0}
 				<button class="text-xl font-bold bg-orange-600 text-white" on:click={moveUp}><Icon id="arrowUp" /></button>
+			{:else}
+				<div class="w-8"></div>
 			{/if}
 			<p class="text-4xl">{indexOfSearch + 1}</p>
 
 			{#if indexOfSearch < parts.length - 2}
 				<button class=" text-xl font-bold bg-orange-600 text-white" on:click={moveDown}> <Icon id="arrowDown" /></button>
+			{:else}
+				<div class="w-8"></div>
 			{/if}
 		</div>
 	{/if}
 </div>
 
-<div class="absolute left-2 bottom-2 right-2 p-1 border-2 border-neutral-300">
+<div class="absolute left-2 bottom-2 right-2 p-1 border-2">
 	<div class="px-4 w-full h-40 overflow-y-scroll">
 		<p name="" id="" class="h-full">
 			{text1}
