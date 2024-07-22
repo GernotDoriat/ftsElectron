@@ -27,7 +27,7 @@ function createStore() {
         add: (fileName, key, keyOffset, keyValue) => {
             update((store) => {
                 let item = store.find((o) => o.fileName == fileName && o.key == key && o.keyOffset == keyOffset)
-                console.log(item)
+                //console.log(item)
                 if (item)
                     item.keyValue = keyValue
                 else
