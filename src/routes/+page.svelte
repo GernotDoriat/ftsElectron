@@ -158,7 +158,7 @@
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2">
 	<div class="px-4 w-full h-40 overflow-y-scroll">
-		<textarea style="resize: none;" class="h-full w-full">{text1}</textarea>
+		<textarea style="resize: none;" class="h-full w-full focus:outline-0">{text1}</textarea>
 	</div>
 
 	<div class="px-4 w-full text-orange-600">
@@ -168,7 +168,7 @@
 	</div>
 
 	<div class="px-4 w-full h-40 overflow-y-scroll">
-		<textarea style="resize: none;" class="h-full w-full">{text2}</textarea>
+		<textarea style="resize: none;" class="h-full w-full focus:outline-0">{text2}</textarea>
 	</div>
 </div>
 
