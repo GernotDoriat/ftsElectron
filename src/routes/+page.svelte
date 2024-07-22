@@ -5,12 +5,10 @@
 
 	onMount(init);
 	function init() {
-		console.log("navigator", navigator);
+		/* console.log("navigator", navigator);
 		console.log("Height", window.innerHeight);
 		console.log("Width", window.innerWidth);
-		/* 		console.log("Height", document.height);
-		console.log("Width", document.width); */
-		console.log("document", document);
+		console.log("document", document); */
 		const textareas = document.querySelectorAll("textarea");
 		for (const textarea of textareas) {
 			textarea.addEventListener("select", logSelection);
@@ -22,12 +20,12 @@
 		console.log(`SEL "${currentSelection}"`);
 	}
 
-	$: costuraFiles = undefined;
-	$: reactOnCosturaFiles(costuraFiles);
-	function reactOnCosturaFiles() {
-		if (costuraFiles && costuraFiles.length == 1) {
-			console.warn("reactOnCosturaFiles");
-			processFile(costuraFiles[0]);
+	$: selectedFiles = undefined;
+	$: reactOnSelectedFiles(selectedFiles);
+	function reactOnSelectedFiles() {
+		if (selectedFiles && selectedFiles.length == 1) {
+			console.warn("reactOnSelectedFiles");
+			processFile(selectedFiles[0]);
 		}
 	}
 
@@ -48,12 +46,10 @@
 	}
 
 	function searchTextChange() {
-		processFile(costuraFiles[0]);
+		processFile(selectedFiles[0]);
 	}
 
 	let searchText = "Beschluss";
-	let fileInput;
-
 	$: text1 = "";
 	$: text2 = "";
 
@@ -62,7 +58,13 @@
 
 	function processText(text) {
 		{
-			text = text.replace(/(\r\n|\n|\r)/gm, "");
+			//text = text.replace(/(\r\n|\n|\r)/gm, " ");
+			let length = 0;
+			do {
+				length = text.length;
+				text = text.replace(/(\n\n)/gm, "\n");
+			} while (length > text.length);
+
 			parts = text.split(searchText);
 			if (searchText && parts.length > 1) showParts();
 		}
@@ -91,7 +93,7 @@
 
 	function add() {
 		console.warn(`add "${currentSelection}"`);
-		ListStore.add(costuraFiles[0].path, searchText, getKeyOffset(), currentSelection);
+		ListStore.add(selectedFiles[0].path, searchText, getKeyOffset(), currentSelection);
 	}
 </script>
 
@@ -106,7 +108,7 @@
 <div class="flex">
 	<div class="m-">
 		<div class="p-4">
-			<input bind:this={fileInput} class="text-2xl" type="file" bind:files={costuraFiles} />
+			<input class="text-2xl" type="file" bind:files={selectedFiles} />
 		</div>
 	</div>
 
@@ -122,7 +124,7 @@
 		</div>
 	</div>
 
-	{#if costuraFiles && searchText}
+	{#if selectedFiles && searchText}
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if indexOfSearch > 0}
 				<button class="text-xl font-bold bg-orange-600 text-white" on:click={moveUp}><Icon id="arrowUp" /></button>
