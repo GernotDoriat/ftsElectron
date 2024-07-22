@@ -60,10 +60,10 @@
 	$: parts = [];
 
 	function processText(text) {
-		text = text.replace(/(\r\n|\n|\r)/gm, "");
-		parts = text.split(searchText);
-		if (parts.length > 1) {
-			showParts();
+		{
+			text = text.replace(/(\r\n|\n|\r)/gm, "");
+			parts = text.split(searchText);
+			if (searchText && parts.length > 1) showParts();
 		}
 	}
 	function showParts() {
@@ -73,17 +73,19 @@
 	}
 
 	function moveUp() {
+		currentSelection = undefined;
 		indexOfSearch--;
 		showParts();
 	}
 	function moveDown() {
+		currentSelection = undefined;
 		indexOfSearch++;
 		showParts();
 	}
 
 	function add() {
 		console.warn(`add "${currentSelection}"`);
-		//text1 = "GAGA";
+		text1 = "GAGA";
 	}
 </script>
 
@@ -142,9 +144,7 @@
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2">
 	<div class="px-4 w-full h-40 overflow-y-scroll">
-		<textarea style="resize: none;" name="" id="" class="h-full w-full">
-			{text1}
-		</textarea>
+		<textarea style="resize: none;" class="h-full w-full">{text1}</textarea>
 	</div>
 
 	<div class="px-4 w-full text-orange-600">
@@ -154,9 +154,7 @@
 	</div>
 
 	<div class="px-4 w-full h-40 overflow-y-scroll">
-		<textarea style="resize: none;" name="" id="" class="h-full w-full">
-			{text2}
-		</textarea>
+		<textarea style="resize: none;" class="h-full w-full">{text2}</textarea>
 	</div>
 </div>
 
