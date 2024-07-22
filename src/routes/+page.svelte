@@ -10,6 +10,14 @@
 		/* 		console.log("Height", document.height);
 		console.log("Width", document.width); */
 		console.log("document", document);
+		const textareas = document.querySelectorAll("textarea");
+		for (const textarea of textareas) {
+			textarea.addEventListener("select", logSelection);
+		}
+	}
+	function logSelection(event) {
+		const selection = event.target.value.substring(event.target.selectionStart, event.target.selectionEnd);
+		console.log(selection);
 	}
 
 	$: costuraFiles = undefined;
@@ -41,6 +49,7 @@
 	$: parts = [];
 
 	function processText(text) {
+		text = text.replace(/(\r\n|\n|\r)/gm, "");
 		parts = text.split(searchText);
 		if (parts.length > 1) {
 			showParts();
@@ -103,9 +112,9 @@
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2">
 	<div class="px-4 w-full h-40 overflow-y-scroll">
-		<p name="" id="" class="h-full">
+		<textarea style="resize: none;" name="" id="" class="h-full w-full">
 			{text1}
-		</p>
+		</textarea>
 	</div>
 
 	<div class="px-4 w-full text-orange-600">
@@ -115,9 +124,9 @@
 	</div>
 
 	<div class="px-4 w-full h-40 overflow-y-scroll">
-		<p name="" id="" class="h-full">
+		<textarea style="resize: none;" name="" id="" class="h-full w-full">
 			{text2}
-		</p>
+		</textarea>
 	</div>
 </div>
 
