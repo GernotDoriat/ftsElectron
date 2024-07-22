@@ -98,6 +98,10 @@
 	function save() {
 		window.ipcElectron.invoke("write-csv", ListStore.getCsv());
 	}
+
+	function selectFolder() {
+		let files = window.ipcElectron.invoke("folder-files");
+	}
 </script>
 
 <!-- 
@@ -109,7 +113,12 @@
 </div>
  -->
 <div class="flex">
-	<div class="m-">
+	<div>
+		<div class="p-5">
+			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFolder}><Icon id="clock" /></button>
+		</div>
+	</div>
+	<div>
 		<div class="p-4">
 			<input class="text-2xl" type="file" bind:files={selectedFiles} />
 		</div>

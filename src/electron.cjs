@@ -147,3 +147,42 @@ ipcMain.handle('write-csv', (event, content) => {
 	}
 })
 
+ipcMain.handle('folder-files', async (event) => {
+	try {
+		let path = await dialog.showOpenDialog({
+			properties: ['openDirectory']
+		})
+		console.log('path', path)
+		let files = await getFiles(path.filePaths[0])
+		console.log('files', files)
+		return files
+
+	} catch (error) {
+		console.error('Error:', error)
+		return { success: false, error: error.message }
+	}
+})
+
+async function getFiles(dir, files_) {
+	files_ = files_ || []
+	var fileNames = await fs.readdir(dir)
+	fileNames = fileNames.filter((o) => !o.startsWith('.'))
+	//console.log(fileNames)
+	for (var fileName of fileNames) {
+		let filePath = dir + '/' + fileName
+		//console.log("FP " + filePath)
+		let stat = await fs.stat(filePath)
+		//console.log(stat)
+		if (stat.isFile()) {
+			//console.log("FILE " + filePath)
+			files_.push(filePath)
+		} else {
+			//console.warn("DIR " + filePath)
+			await getFiles(filePath, files_)
+		}
+
+	}
+	return files_
+}
+
+
