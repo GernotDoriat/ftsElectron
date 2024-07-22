@@ -13,6 +13,9 @@
 		for (const textarea of textareas) {
 			textarea.addEventListener("select", logSelection);
 		}
+		setTimeout(() => {
+			searchText = "Beschluss";
+		}, 1000);
 	}
 	$: currentSelection = undefined;
 	function logSelection(event) {
@@ -49,7 +52,7 @@
 		processFile(selectedFiles[0]);
 	}
 
-	let searchText = "Beschluss";
+	let searchText = undefined;
 	$: text1 = "";
 	$: text2 = "";
 
