@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import Icon from "../components/Icon.svelte";
-	import { AppDataStore } from "../stores/AppDataStore";
+	import { ListStore } from "../stores/ListStore";
 
 	onMount(init);
 	function init() {
@@ -91,7 +91,7 @@
 
 	function add() {
 		console.warn(`add "${currentSelection}"`);
-		AppDataStore.add(costuraFiles[0].path, searchText, getKeyOffset(), currentSelection);
+		ListStore.add(costuraFiles[0].path, searchText, getKeyOffset(), currentSelection);
 	}
 </script>
 
