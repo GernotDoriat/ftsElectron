@@ -58,13 +58,10 @@
 
 	function processText(text) {
 		{
-			//text = text.replace(/(\r\n|\n|\r)/gm, " ");
-			let length = 0;
-			do {
-				length = text.length;
-				text = text.replace(/(\n\n)/gm, "\n");
-			} while (length > text.length);
-
+			// für eine kompakte Ansicht
+			text = text.replace(/(\r\n|\n|\r)/gm, " ");
+			// CSV
+			text = text.replace(/(;)/gm, ",");
 			parts = text.split(searchText);
 			if (searchText && parts.length > 1) showParts();
 		}
@@ -93,7 +90,10 @@
 
 	function add() {
 		console.warn(`add "${currentSelection}"`);
-		ListStore.add(selectedFiles[0].path, searchText, getKeyOffset(), currentSelection);
+		ListStore.add(selectedFiles[0].name, searchText, getKeyOffset(), currentSelection);
+	}
+	function save() {
+		window.ipcElectron.invoke("write-csv", ListStore.getCsv());
 	}
 </script>
 
@@ -145,6 +145,7 @@
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if currentSelection}
 				<button class="text-xl font-bold bg-orange-600 text-white" on:click={add}><Icon id="plus" /></button>
+				<button class="text-xl font-bold bg-orange-600 text-white" on:click={save}><Icon id="docUpdate" /></button>
 			{:else}
 				<div class="w-8"></div>
 			{/if}

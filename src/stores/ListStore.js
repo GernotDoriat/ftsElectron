@@ -1,9 +1,9 @@
 import { writable } from "svelte/store"
 
-
+let storeContent = []
 
 function createStore() {
-    const { subscribe, set, update } = writable([], start)
+    const { subscribe, set, update } = writable(storeContent, start)
 
     function start() {
         //logI('START playerStore');
@@ -37,7 +37,14 @@ function createStore() {
             })
         },
 
+        getCsv: () => {
+            let csv = 'fileName;key;keyOffset;keyValue\n'
+            storeContent.forEach(row => {
+                csv += `${row.fileName};${row.key};${row.keyOffset};${row.keyValue}\n`
+            })
+            return csv
 
+        },
 
     }
 }

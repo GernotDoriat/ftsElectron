@@ -1,9 +1,13 @@
 const windowStateManager = require('electron-window-state')
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const contextMenu = require('electron-context-menu')
 const serve = require('electron-serve')
 const path = require('path')
 const fs = require('fs').promises
+
+
+
+
 
 try {
 	require('electron-reloader')(module)
@@ -126,6 +130,19 @@ ipcMain.handle('extract-text', async (event, filePath) => {
 		return { success: true, text }
 	} catch (error) {
 		console.error('Error extracting text:', error)
+		return { success: false, error: error.message }
+	}
+})
+
+
+ipcMain.handle('write-csv', (event, content) => {
+	try {
+		const options = { defaultPath: app.getPath('downloads') + '/electron.csv' }
+		dialog.showSaveDialog(null, options).then(({ filePath }) => {
+			fs.writeFile(filePath, content)
+		})
+	} catch (error) {
+		console.error('Error:', error)
 		return { success: false, error: error.message }
 	}
 })
