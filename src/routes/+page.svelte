@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import Icon from "../components/Icon.svelte";
+	import { AppDataStore } from "../stores/AppDataStore";
 
 	onMount(init);
 	function init() {
@@ -53,8 +54,8 @@
 	let searchText = "Beschluss";
 	let fileInput;
 
-	$: text1 = "davor";
-	$: text2 = "danach";
+	$: text1 = "";
+	$: text2 = "";
 
 	$: indexOfSearch = 0;
 	$: parts = [];
@@ -71,6 +72,11 @@
 		text1 = parts[indexOfSearch];
 		text2 = parts[indexOfSearch + 1];
 	}
+	function getKeyOffset() {
+		let offset = 0;
+		for (let i = 0; i <= indexOfSearch; i++) offset += parts[i].length;
+		return offset;
+	}
 
 	function moveUp() {
 		currentSelection = undefined;
@@ -85,7 +91,7 @@
 
 	function add() {
 		console.warn(`add "${currentSelection}"`);
-		text1 = "GAGA";
+		AppDataStore.add(costuraFiles[0].path, searchText, getKeyOffset(), currentSelection);
 	}
 </script>
 
