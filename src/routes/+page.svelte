@@ -116,7 +116,7 @@
 		</div>
 	</div>
 
-	{#if costuraFiles}
+	{#if costuraFiles && searchText}
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if indexOfSearch > 0}
 				<button class="text-xl font-bold bg-orange-600 text-white" on:click={moveUp}><Icon id="arrowUp" /></button>
@@ -124,7 +124,9 @@
 				<div class="w-8"></div>
 			{/if}
 
-			<p class="text-4xl font-semibold">{indexOfSearch + 1}</p>
+			{#if parts.length > 1}
+				<p class="text-4xl font-semibold">{`${indexOfSearch + 1}/${parts.length - 1}`}</p>
+			{/if}
 
 			{#if indexOfSearch < parts.length - 2}
 				<button class=" text-xl font-bold bg-orange-600 text-white" on:click={moveDown}> <Icon id="arrowDown" /></button>
