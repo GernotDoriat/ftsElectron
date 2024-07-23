@@ -102,6 +102,9 @@
 	function selectFolder() {
 		let files = window.ipcElectron.invoke("folder-files");
 	}
+	function selectFile() {
+		let files = window.ipcElectron.invoke("file");
+	}
 </script>
 
 <!-- 
@@ -115,7 +118,12 @@
 <div class="flex">
 	<div>
 		<div class="p-5">
-			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFolder}><Icon id="clock" /></button>
+			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFolder}><Icon id="folder" /></button>
+		</div>
+	</div>
+	<div>
+		<div class="p-5">
+			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFile}><Icon id="file" /></button>
 		</div>
 	</div>
 	<div>
@@ -125,7 +133,7 @@
 	</div>
 
 	<div class=" m-2">
-		<div class="px-4 w-full">
+		<div class="px-4 w-full text-orange-600">
 			<input
 				class="p-2 text-3xl w-full focus:outline-0"
 				type="text"

@@ -163,6 +163,20 @@ ipcMain.handle('folder-files', async (event) => {
 	}
 })
 
+ipcMain.handle('file', async (event) => {
+	try {
+		let path = await dialog.showOpenDialog()
+		console.log('path', path)
+		let files = await getFiles(path.filePaths[0])
+		console.log('files', files)
+		return files
+
+	} catch (error) {
+		console.error('Error:', error)
+		return { success: false, error: error.message }
+	}
+})
+
 async function getFiles(dir, files_) {
 	files_ = files_ || []
 	var fileNames = await fs.readdir(dir)
