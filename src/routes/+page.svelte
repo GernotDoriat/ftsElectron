@@ -105,6 +105,14 @@
 			processFilePath(result.file);
 		}
 	}
+	async function selectCsv() {
+		let result = await window.ipcElectron.invoke("selectCsv");
+		console.warn("selectCsv", result);
+		if (result.success) {
+			/* filesList = [result.file];
+			processFilePath(result.file); */
+		}
+	}
 </script>
 
 <!-- 
@@ -116,6 +124,11 @@
 </div>
  -->
 <div class="flex">
+	<div>
+		<div class="flex gap-1 p-5">
+			<button class="text-xl font-bold bg-sky-500 text-white" on:click={selectCsv}><Icon id="docImport" /></button>
+		</div>
+	</div>
 	<div>
 		<div class="flex gap-1 p-5">
 			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFolder}><Icon id="folder" /></button>
@@ -165,17 +178,17 @@
 </div>
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2">
-	<div class="px-4 w-full h-40 overflow-y-scroll">
+	<div class=" w-full h-40 overflow-y-scroll">
 		<textarea style="resize: none;" class="h-full w-full focus:outline-0">{text1}</textarea>
 	</div>
 
-	<div class="px-4 w-full text-orange-600">
+	<div class="text-center w-full text-orange-600">
 		<p class="text-xl font-semibold">
 			{searchText}
 		</p>
 	</div>
 
-	<div class="px-4 w-full h-40 overflow-y-scroll">
+	<div class=" w-full h-40 overflow-y-scroll">
 		<textarea style="resize: none;" class="h-full w-full focus:outline-0">{text2}</textarea>
 	</div>
 </div>

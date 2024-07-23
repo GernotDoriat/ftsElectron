@@ -149,9 +149,7 @@ ipcMain.handle('write-csv', (event, content) => {
 
 ipcMain.handle('selectFolder', async (event) => {
 	try {
-		let path = await dialog.showOpenDialog({
-			properties: ['openDirectory']
-		})
+		let path = await dialog.showOpenDialog({ properties: ['openDirectory'] })
 		console.log('path', path)
 		let files = await getFiles(path.filePaths[0])
 		console.log('files', files)
@@ -168,7 +166,17 @@ ipcMain.handle('selectFile', async (event) => {
 		let path = await dialog.showOpenDialog()
 		console.log('path', path)
 		return { success: true, file: path.filePaths[0] }
+	} catch (error) {
+		console.error('Error:', error)
+		return { success: false, error: error.message }
+	}
+})
 
+ipcMain.handle('selectCsv', async (event) => {
+	try {
+		let path = await dialog.showOpenDialog({ filters: [{ name: 'CSV', extensions: ['csv'] },] })
+		console.log('path', path)
+		return { success: true, file: path.filePaths[0] }
 	} catch (error) {
 		console.error('Error:', error)
 		return { success: false, error: error.message }
@@ -192,7 +200,6 @@ async function getFiles(dir, files_) {
 			//console.warn("DIR " + filePath)
 			await getFiles(filePath, files_)
 		}
-
 	}
 	return files_
 }

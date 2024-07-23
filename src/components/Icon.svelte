@@ -75,7 +75,7 @@
         />
     </svg> -->
 {:else if id == "docImport"}
-	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+	<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 		<path
 			stroke-linecap="round"
 			stroke-linejoin="round"
