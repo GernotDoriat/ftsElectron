@@ -47,6 +47,12 @@
 		let result = await window.ipcElectron.invoke("extract-text", file.path);
 		processText(result.text);
 	}
+	async function processFilePath(filePath) {
+		reset();
+		console.warn("processFile", filePath);
+		let result = await window.ipcElectron.invoke("extract-text", filePath);
+		processText(result.text);
+	}
 
 	function searchTextChange() {
 		processFile(selectedFiles[0]);
@@ -100,10 +106,15 @@
 	}
 
 	function selectFolder() {
-		let files = window.ipcElectron.invoke("folder-files");
+		let files = window.ipcElectron.invoke("selectFolder");
+		console.warn("selectFolder", files);
 	}
-	function selectFile() {
-		let files = window.ipcElectron.invoke("file");
+	async function selectFile() {
+		let result = await window.ipcElectron.invoke("selectFile");
+		console.warn("selectFile", result);
+		if (result.success) {
+			processFilePath(result.file);
+		}
 	}
 </script>
 
@@ -117,15 +128,12 @@
  -->
 <div class="flex">
 	<div>
-		<div class="p-5">
+		<div class="flex gap-1 p-5">
 			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFolder}><Icon id="folder" /></button>
-		</div>
-	</div>
-	<div>
-		<div class="p-5">
 			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFile}><Icon id="file" /></button>
 		</div>
 	</div>
+
 	<div>
 		<div class="p-4">
 			<input class="text-2xl" type="file" bind:files={selectedFiles} />
