@@ -23,14 +23,8 @@
 		console.log(`SEL "${currentSelection}"`);
 	}
 
-	$: selectedFiles = undefined;
-	$: reactOnSelectedFiles(selectedFiles);
-	function reactOnSelectedFiles() {
-		if (selectedFiles && selectedFiles.length == 1) {
-			console.warn("reactOnSelectedFiles");
-			processFile(selectedFiles[0]);
-		}
-	}
+	$: filesList = undefined;
+	$: filesListIndex = 0;
 
 	function reset() {
 		console.warn("reset");
@@ -41,12 +35,6 @@
 		parts = [];
 	}
 
-	async function processFile(file) {
-		reset();
-		console.warn("processFile", file);
-		let result = await window.ipcElectron.invoke("extract-text", file.path);
-		processText(result.text);
-	}
 	async function processFilePath(filePath) {
 		reset();
 		console.warn("processFile", filePath);
@@ -55,7 +43,7 @@
 	}
 
 	function searchTextChange() {
-		processFile(selectedFiles[0]);
+		processFilePath(filesList[filesListIndex]);
 	}
 
 	let searchText = undefined;
@@ -99,7 +87,7 @@
 
 	function add() {
 		console.warn(`add "${currentSelection}"`);
-		ListStore.add(selectedFiles[0].name, searchText, getKeyOffset(), currentSelection);
+		ListStore.add(filesList[0].name, searchText, getKeyOffset(), currentSelection);
 	}
 	function save() {
 		window.ipcElectron.invoke("write-csv", ListStore.getCsv());
@@ -113,6 +101,7 @@
 		let result = await window.ipcElectron.invoke("selectFile");
 		console.warn("selectFile", result);
 		if (result.success) {
+			filesList = [result.file];
 			processFilePath(result.file);
 		}
 	}
@@ -134,12 +123,6 @@
 		</div>
 	</div>
 
-	<div>
-		<div class="p-4">
-			<input class="text-2xl" type="file" bind:files={selectedFiles} />
-		</div>
-	</div>
-
 	<div class=" m-2">
 		<div class="px-4 w-full text-orange-600">
 			<input
@@ -152,7 +135,7 @@
 		</div>
 	</div>
 
-	{#if selectedFiles && searchText}
+	{#if filesList && searchText}
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if indexOfSearch > 0}
 				<button class="text-xl font-bold bg-orange-600 text-white" on:click={moveUp}><Icon id="arrowUp" /></button>
