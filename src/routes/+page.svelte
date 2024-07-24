@@ -105,12 +105,12 @@
 			processFilePath(result.file);
 		}
 	}
-	async function selectCsv() {
-		let result = await window.ipcElectron.invoke("selectCsv");
-		console.warn("selectCsv", result);
+	async function getListStoreData() {
+		let result = await window.ipcElectron.invoke("getListStoreData");
+		//console.warn("getListStoreData", result);
 		if (result.success) {
-			/* filesList = [result.file];
-			processFilePath(result.file); */
+			ListStore.init(result.json);
+			console.log("STORE", $ListStore);
 		}
 	}
 </script>
@@ -126,7 +126,7 @@
 <div class="flex">
 	<div>
 		<div class="flex gap-1 p-5">
-			<button class="text-xl font-bold bg-sky-500 text-white" on:click={selectCsv}><Icon id="docImport" /></button>
+			<button class="text-xl font-bold bg-sky-500 text-white" on:click={getListStoreData}><Icon id="docImport" /></button>
 		</div>
 	</div>
 	<div>

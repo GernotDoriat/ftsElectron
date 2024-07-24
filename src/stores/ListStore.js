@@ -19,7 +19,13 @@ function createStore() {
         set,
         reset: () => {
             update(store => {
-                store = { ...initialData }
+                store = []
+                return store
+            })
+        },
+        init: (list) => {
+            update(store => {
+                store = [...list]
                 return store
             })
         },

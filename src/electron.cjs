@@ -174,7 +174,7 @@ ipcMain.handle('selectFile', async (event) => {
 	}
 })
 
-ipcMain.handle('selectCsv', async (event) => {
+ipcMain.handle('getListStoreData', async (event) => {
 	try {
 		let path = await dialog.showOpenDialog({ filters: [{ name: 'CSV', extensions: ['csv'] },] })
 		let csvText = await fs.readFile(path.filePaths[0], 'utf8')
