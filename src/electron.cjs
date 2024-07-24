@@ -5,6 +5,8 @@ const serve = require('electron-serve')
 const path = require('path')
 const fs = require('fs').promises
 
+const Papa = require('papaparse')
+
 
 
 
@@ -175,13 +177,38 @@ ipcMain.handle('selectFile', async (event) => {
 ipcMain.handle('selectCsv', async (event) => {
 	try {
 		let path = await dialog.showOpenDialog({ filters: [{ name: 'CSV', extensions: ['csv'] },] })
-		console.log('path', path)
-		return { success: true, file: path.filePaths[0] }
+		let csvText = await fs.readFile(path.filePaths[0], 'utf8')
+		let parsed = doParse(csvText)
+		return { success: true, json: parsed }
 	} catch (error) {
 		console.error('Error:', error)
 		return { success: false, error: error.message }
 	}
 })
+
+
+function doParse(csvText) {
+	// Parse local CSV file
+	let result = []
+	Papa.parse(csvText, {
+		complete: function (parsed) {
+			if (Array.isArray(parsed.data) && parsed.data.length > 0) {
+				let rows = parsed.data
+				for (let r = 1; r < rows.length; r++) {
+					let row = rows[r]
+					if (row.length == rows[0].length) {
+						resultItem = {}
+						for (let k = 0; k < rows[0].length; k++)
+							resultItem[rows[0][k]] = row[k]
+						result.push(resultItem)
+					}
+				}
+			}
+		}
+	})
+	return result
+}
+
 
 async function getFiles(dir, files_) {
 	files_ = files_ || []
