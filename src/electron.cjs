@@ -114,7 +114,6 @@ ipcMain.on('to-main', (event, count) => {
 
 ipcMain.handle('extract-text', async (event, filePath) => {
 	try {
-		//console.log('Received file path:', filePath)
 		const { getTextExtractor } = await import('office-text-extractor')
 		const fileBuffer = await fs.readFile(filePath)
 		//console.log('File buffer:', fileBuffer)
@@ -151,10 +150,13 @@ ipcMain.handle('write-csv', (event, content) => {
 
 ipcMain.handle('selectFolder', async (event) => {
 	try {
-		let path = await dialog.showOpenDialog({ properties: ['openDirectory'] })
-		console.log('path', path)
-		let files = await getFiles(path.filePaths[0])
-		console.log('files', files)
+		let selectedDirPath = await dialog.showOpenDialog({ properties: ['openDirectory'] })
+		console.log('selectedDirPath', selectedDirPath)
+		let filePathes = await getFilePathes(selectedDirPath.filePaths[0])
+		let files = []
+		for (const filePath of filePathes) {
+			files.push({ filePath: filePath, fileName: path.basename(filePath) })
+		}
 		return { success: true, files: files }
 
 	} catch (error) {
@@ -165,9 +167,9 @@ ipcMain.handle('selectFolder', async (event) => {
 
 ipcMain.handle('selectFile', async (event) => {
 	try {
-		let path = await dialog.showOpenDialog()
-		console.log('path', path)
-		return { success: true, file: path.filePaths[0] }
+		let selection = await dialog.showOpenDialog()
+		console.log('selection', selection)
+		return { success: true, file: { filePath: selection.filePaths[0], fileName: path.basename(selection.filePaths[0]) } }
 	} catch (error) {
 		console.error('Error:', error)
 		return { success: false, error: error.message }
@@ -176,8 +178,8 @@ ipcMain.handle('selectFile', async (event) => {
 
 ipcMain.handle('getListStoreData', async (event) => {
 	try {
-		let path = await dialog.showOpenDialog({ filters: [{ name: 'CSV', extensions: ['csv'] },] })
-		let csvText = await fs.readFile(path.filePaths[0], 'utf8')
+		let selection = await dialog.showOpenDialog({ filters: [{ name: 'CSV', extensions: ['csv'] },] })
+		let csvText = await fs.readFile(selection.filePaths[0], 'utf8')
 		let parsed = doParse(csvText)
 		return { success: true, json: parsed }
 	} catch (error) {
@@ -210,7 +212,7 @@ function doParse(csvText) {
 }
 
 
-async function getFiles(dir, files_) {
+async function getFilePathes(dir, files_) {
 	files_ = files_ || []
 	var fileNames = await fs.readdir(dir)
 	fileNames = fileNames.filter((o) => !o.startsWith('.'))
@@ -225,7 +227,7 @@ async function getFiles(dir, files_) {
 			files_.push(filePath)
 		} else {
 			//console.warn("DIR " + filePath)
-			await getFiles(filePath, files_)
+			await getFilePathes(filePath, files_)
 		}
 	}
 	return files_

@@ -43,7 +43,7 @@
 	}
 
 	function searchTextChange() {
-		processFilePath(filesList[filesListIndex]);
+		processFilePath(filesList[filesListIndex].filePath);
 	}
 
 	let searchText = undefined;
@@ -68,7 +68,7 @@
 		console.warn(`showParts indexOfSearch = ${indexOfSearch}`);
 		text1 = parts[indexOfSearch];
 		text2 = parts[indexOfSearch + 1];
-		let item = ListStore.getItem(filesList[filesListIndex], searchText, getKeyOffset());
+		let item = ListStore.getItem(filesList[filesListIndex].filePath, searchText, getKeyOffset());
 		//console.warn("ListStore.getItem", item);
 		if (item) {
 			//console.warn("item.keyValue", item.keyValue.length, item.keyValue);
@@ -103,7 +103,7 @@
 
 	function setItem() {
 		console.warn(`setItem "${currentSelection}"`);
-		ListStore.setItem(filesList[filesListIndex], searchText, getKeyOffset(), currentSelection);
+		ListStore.setItem(filesList[filesListIndex].filePath, searchText, getKeyOffset(), currentSelection);
 	}
 	function save() {
 		window.ipcElectron.invoke("write-csv", ListStore.getCsv());
@@ -120,7 +120,7 @@
 			filesList.push(result.file);
 			filesListIndex = filesList.length - 1;
 			console.warn(filesList, filesListIndex);
-			processFilePath(result.file);
+			processFilePath(filesList[filesListIndex].filePath);
 		}
 	}
 	async function getListStoreData() {
