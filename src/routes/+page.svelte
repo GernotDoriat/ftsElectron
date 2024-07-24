@@ -23,7 +23,7 @@
 		console.log(`SEL "${currentSelection}"`);
 	}
 
-	$: filesList = undefined;
+	$: filesList = [];
 	$: filesListIndex = 0;
 
 	function reset() {
@@ -37,7 +37,7 @@
 
 	async function processFilePath(filePath) {
 		reset();
-		console.warn("processFile", filePath);
+		console.log("processFilePath", filePath);
 		let result = await window.ipcElectron.invoke("extract-text", filePath);
 		processText(result.text);
 	}
@@ -67,6 +67,8 @@
 		console.warn(`showParts indexOfSearch = ${indexOfSearch}`);
 		text1 = parts[indexOfSearch];
 		text2 = parts[indexOfSearch + 1];
+		let item = ListStore.getItem(filesList[filesListIndex], searchText, getKeyOffset());
+		console.warn(item);
 	}
 	function getKeyOffset() {
 		let offset = 0;
@@ -85,9 +87,9 @@
 		showParts();
 	}
 
-	function add() {
-		console.warn(`add "${currentSelection}"`);
-		ListStore.add(filesList[0].name, searchText, getKeyOffset(), currentSelection);
+	function setItem() {
+		console.warn(`setItem "${currentSelection}"`);
+		ListStore.setItem(filesList[filesListIndex], searchText, getKeyOffset(), currentSelection);
 	}
 	function save() {
 		window.ipcElectron.invoke("write-csv", ListStore.getCsv());
@@ -101,7 +103,9 @@
 		let result = await window.ipcElectron.invoke("selectFile");
 		console.warn("selectFile", result);
 		if (result.success) {
-			filesList = [result.file];
+			filesList.push(result.file);
+			filesListIndex = filesList.length - 1;
+			console.warn(filesList, filesListIndex);
 			processFilePath(result.file);
 		}
 	}
@@ -168,7 +172,7 @@
 		</div>
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if currentSelection}
-				<button class="text-xl font-bold bg-orange-600 text-white" on:click={add}><Icon id="plus" /></button>
+				<button class="text-xl font-bold bg-orange-600 text-white" on:click={setItem}><Icon id="plus" /></button>
 				<button class="text-xl font-bold bg-orange-600 text-white" on:click={save}><Icon id="docUpdate" /></button>
 			{:else}
 				<div class="w-8"></div>

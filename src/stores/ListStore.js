@@ -24,13 +24,15 @@ function createStore() {
             })
         },
         init: (list) => {
+            storeContent = [...list]
             update(store => {
-                store = [...list]
+                store = storeContent
                 return store
             })
         },
 
-        add: (fileName, key, keyOffset, keyValue) => {
+        setItem: (fileName, key, keyOffset, keyValue) => {
+            console.log(`setItem ${fileName} , ${key} , ${keyOffset} , ${keyValue}`)
             update((store) => {
                 let item = store.find((o) => o.fileName == fileName && o.key == key && o.keyOffset == keyOffset)
                 //console.log(item)
@@ -42,6 +44,14 @@ function createStore() {
                 return store
             })
         },
+        getItem: (fileName, key, keyOffset) => {
+            console.log(`getItem ${fileName} , ${key} , ${keyOffset}`)
+            console.log('storeContent', storeContent)
+            return storeContent.find((o) => o.fileName == fileName && o.key == key && o.keyOffset == keyOffset)
+        },
+
+
+
 
         getCsv: () => {
             let csv = 'fileName;key;keyOffset;keyValue\n'
