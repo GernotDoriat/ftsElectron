@@ -63,12 +63,26 @@
 			if (searchText && parts.length > 1) showParts();
 		}
 	}
+	let textarea2;
 	function showParts() {
 		console.warn(`showParts indexOfSearch = ${indexOfSearch}`);
 		text1 = parts[indexOfSearch];
 		text2 = parts[indexOfSearch + 1];
 		let item = ListStore.getItem(filesList[filesListIndex], searchText, getKeyOffset());
-		console.warn(item);
+		//console.warn("ListStore.getItem", item);
+		if (item) {
+			//console.warn("item.keyValue", item.keyValue.length, item.keyValue);
+			let toBeSelected = item.keyValue;
+			let index = text2.indexOf(toBeSelected);
+			//console.warn("text2.indexOf", index);
+			if (index > 0) {
+				let textarea2 = document.getElementById("textarea2");
+				textarea2.focus();
+				setTimeout(() => {
+					textarea2.setSelectionRange(index, index + toBeSelected.length);
+				}, 10);
+			}
+		}
 	}
 	function getKeyOffset() {
 		let offset = 0;
@@ -193,7 +207,7 @@
 	</div>
 
 	<div class=" w-full h-40 overflow-y-scroll">
-		<textarea style="resize: none;" class="h-full w-full focus:outline-0">{text2}</textarea>
+		<textarea id="textarea2" style="resize: none;" class="h-full w-full focus:outline-0">{text2}</textarea>
 	</div>
 </div>
 
