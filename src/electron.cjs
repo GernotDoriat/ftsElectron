@@ -138,10 +138,7 @@ ipcMain.handle('extract-text', async (event, filePath) => {
 
 ipcMain.handle('write-csv', (event, content, fileName) => {
 	try {
-
-
-
-		const options = { defaultPath: app.getPath('downloads') + ` ${fileName}.csv` }
+		const options = { defaultPath: app.getPath('downloads') + `/${fileName}.csv` }
 		dialog.showSaveDialog(null, options).then(({ filePath }) => {
 			fs.writeFile(filePath, content)
 		})
