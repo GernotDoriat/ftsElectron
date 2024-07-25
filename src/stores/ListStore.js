@@ -32,39 +32,39 @@ function createStore() {
             })
         },
 
-        setItem: (fileName, key, keyOffset, keyValue) => {
-            console.log(`setItem ${fileName} , ${key} , ${keyOffset} , ${keyValue}`)
+        setItem: (fileName, keyWord, keyOffset, keyValue) => {
+            console.log(`setItem ${fileName} , ${keyWord} , ${keyOffset} , ${keyValue}`)
             update((store) => {
-                let item = store.find((o) => o.fileName == fileName && o.key == key && o.keyOffset == keyOffset)
+                let item = store.find((o) => o.fileName == fileName && o.keyWord == keyWord && o.keyOffset == keyOffset)
                 //console.log(item)
                 if (item)
                     item.keyValue = keyValue
                 else
-                    store.push({ fileName: fileName, key: key, keyOffset: keyOffset, keyValue: keyValue })
+                    store.push({ fileName: fileName, keyWord: keyWord, keyOffset: keyOffset, keyValue: keyValue })
                 console.log('STORE', store)
                 return store
             })
         },
-        getItem: (fileName, key, keyOffset) => {
-            console.log(`getItem ${fileName} , ${key} , ${keyOffset}`)
+        getItem: (fileName, keyWord, keyOffset) => {
+            console.log(`getItem ${fileName} , ${keyWord} , ${keyOffset}`)
             console.log('storeContent', storeContent)
-            return storeContent.find((o) => o.fileName == fileName && o.key == key && o.keyOffset == keyOffset)
+            return storeContent.find((o) => o.fileName == fileName && o.keyWord == keyWord && o.keyOffset == keyOffset)
         },
 
 
 
 
         getCsv: () => {
-            let csv = 'fileName;key;keyOffset;keyValue\n'
+            let csv = 'fileName;keyWord;keyOffset;keyValue\n'
             storeContent.forEach(row => {
-                csv += `${row.fileName};${row.key};${row.keyOffset};${row.keyValue}\n`
+                csv += `${row.fileName};${row.keyWord};${row.keyOffset};${row.keyValue}\n`
             })
             return csv
 
         },
         getFileName: () => {
             if (storeContent.length > 0)
-                return storeContent[0].key
+                return storeContent[0].keyWord
             return 'gaga'
         },
 

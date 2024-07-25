@@ -132,7 +132,7 @@
 			ListStore.init(result.json);
 			console.log("STORE", $ListStore);
 
-			if (result.json.length > 0 && result.json[0].key) keyWord = result.json[0].key;
+			if (result.json.length > 0 && result.json[0].keyWord) keyWord = result.json[0].keyWord;
 			else keyWord = "";
 			if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
 		}
