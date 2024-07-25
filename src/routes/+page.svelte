@@ -14,7 +14,7 @@
 			textarea.addEventListener("select", logSelection);
 		}
 		setTimeout(() => {
-			searchText = "Beschluss";
+			keyWord = "Beschluss";
 		}, 1000);
 	}
 	$: currentSelection = undefined;
@@ -31,7 +31,7 @@
 		currentSelection = undefined;
 		text1 = "";
 		text2 = "";
-		indexOfSearch = 0;
+		indexOfKeyWord = 0;
 		parts = [];
 	}
 
@@ -47,11 +47,11 @@
 		if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
 	}
 
-	let searchText = "";
+	let keyWord = "";
 	$: text1 = "";
 	$: text2 = "";
 
-	$: indexOfSearch = 0;
+	$: indexOfKeyWord = 0;
 	$: parts = [];
 
 	function processText(text) {
@@ -60,16 +60,16 @@
 			text = text.replace(/(\r\n|\n|\r)/gm, " ");
 			// CSV
 			text = text.replace(/(;)/gm, ",");
-			parts = text.split(searchText);
-			if (searchText && parts.length > 1) showParts();
+			parts = text.split(keyWord);
+			if (keyWord && parts.length > 1) showParts();
 		}
 	}
 	let textarea2;
 	function showParts() {
-		console.warn(`showParts indexOfSearch = ${indexOfSearch}`);
-		text1 = parts[indexOfSearch];
-		text2 = parts[indexOfSearch + 1];
-		let item = ListStore.getItem(filesList[filesListIndex].filePath, searchText, getKeyOffset());
+		console.warn(`showParts indexOfSearch = ${indexOfKeyWord}`);
+		text1 = parts[indexOfKeyWord];
+		text2 = parts[indexOfKeyWord + 1];
+		let item = ListStore.getItem(filesList[filesListIndex].filePath, keyWord, getKeyOffset());
 		//console.warn("ListStore.getItem", item);
 		if (item) {
 			//console.warn("item.keyValue", item.keyValue.length, item.keyValue);
@@ -87,24 +87,24 @@
 	}
 	function getKeyOffset() {
 		let offset = 0;
-		for (let i = 0; i <= indexOfSearch; i++) offset += parts[i].length;
+		for (let i = 0; i <= indexOfKeyWord; i++) offset += parts[i].length;
 		return offset;
 	}
 
 	function moveUp() {
 		currentSelection = undefined;
-		indexOfSearch--;
+		indexOfKeyWord--;
 		showParts();
 	}
 	function moveDown() {
 		currentSelection = undefined;
-		indexOfSearch++;
+		indexOfKeyWord++;
 		showParts();
 	}
 
 	function setItem() {
 		console.warn(`setItem "${currentSelection}"`);
-		ListStore.setItem(filesList[filesListIndex].filePath, searchText, getKeyOffset(), currentSelection);
+		ListStore.setItem(filesList[filesListIndex].filePath, keyWord, getKeyOffset(), currentSelection);
 		showParts();
 	}
 	function save() {
@@ -132,8 +132,8 @@
 			ListStore.init(result.json);
 			console.log("STORE", $ListStore);
 
-			if (result.json.length > 0 && result.json[0].key) searchText = result.json[0].key;
-			else searchText = "";
+			if (result.json.length > 0 && result.json[0].key) keyWord = result.json[0].key;
+			else keyWord = "";
 			if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
 		}
 	}
@@ -166,25 +166,25 @@
 				class="p-2 text-3xl w-full focus:outline-0"
 				type="text"
 				placeholder="Suchbegriff eingeben oder einsetzen..."
-				bind:value={searchText}
+				bind:value={keyWord}
 				on:input={inputSearchTextChange}
 			/>
 		</div>
 	</div>
 
-	{#if filesList && searchText}
+	{#if filesList && keyWord}
 		<div class="mx-2 my-3 h-10 flex gap-2">
-			{#if indexOfSearch > 0}
+			{#if indexOfKeyWord > 0}
 				<button class="text-xl font-bold bg-orange-600 text-white" on:click={moveUp}><Icon id="arrowUp" /></button>
 			{:else}
 				<div class="w-8"></div>
 			{/if}
 
 			{#if parts.length > 1}
-				<p class="text-4xl font-semibold">{`${indexOfSearch + 1}/${parts.length - 1}`}</p>
+				<p class="text-4xl font-semibold">{`${indexOfKeyWord + 1}/${parts.length - 1}`}</p>
 			{/if}
 
-			{#if indexOfSearch < parts.length - 2}
+			{#if indexOfKeyWord < parts.length - 2}
 				<button class=" text-xl font-bold bg-orange-600 text-white" on:click={moveDown}> <Icon id="arrowDown" /></button>
 			{:else}
 				<div class="w-8"></div>
@@ -208,7 +208,7 @@
 
 	<div class="text-center w-full text-orange-600">
 		<p class="text-xl font-semibold">
-			{searchText}
+			{keyWord}
 		</p>
 	</div>
 
