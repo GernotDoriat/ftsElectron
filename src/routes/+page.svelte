@@ -24,7 +24,7 @@
 	}
 
 	$: filesList = [];
-	$: filesListIndex = 0;
+	let currentFile = "";
 
 	function clear() {
 		console.warn("clear");
@@ -44,7 +44,7 @@
 
 	function inputSearchTextChange() {
 		ListStore.clear();
-		if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
+		if (filesList.length > 0) processFilePath(currentFile);
 	}
 
 	let keyWord = "";
@@ -69,7 +69,7 @@
 		console.warn(`showParts indexOfSearch = ${indexOfKeyWord}`);
 		text1 = parts[indexOfKeyWord];
 		text2 = parts[indexOfKeyWord + 1];
-		let item = ListStore.getItem(filesList[filesListIndex].fileName, keyWord, getKeyOffset());
+		let item = ListStore.getItem(currentFile.fileName, keyWord, getKeyOffset());
 		//console.warn("ListStore.getItem", item);
 		if (item) {
 			//console.warn("item.keyValue", item.keyValue.length, item.keyValue);
@@ -104,7 +104,7 @@
 
 	function setItem() {
 		console.warn(`setItem "${currentSelection}"`);
-		ListStore.setItem(filesList[filesListIndex].fileName, keyWord, getKeyOffset(), currentSelection);
+		ListStore.setItem(currentFile.fileName, keyWord, getKeyOffset(), currentSelection);
 		showParts();
 	}
 	function save() {
@@ -119,10 +119,9 @@
 		let result = await window.ipcElectron.invoke("selectFile");
 		console.warn("selectFile", result);
 		if (result.success) {
-			filesList.push(result.file);
-			filesListIndex = filesList.length - 1;
-			console.warn(filesList, filesListIndex);
-			processFilePath(filesList[filesListIndex].filePath);
+			filesList = [...filesList, result.file];
+			currentFile = filesList[filesList.length - 1];
+			processFilePath(currentFile.filePath);
 		}
 	}
 	async function getListStoreData() {
@@ -131,16 +130,16 @@
 		if (result.success) {
 			ListStore.init(result.json);
 			console.log("STORE", $ListStore);
-
 			if (result.json.length > 0 && result.json[0].keyWord) keyWord = result.json[0].keyWord;
 			else keyWord = "";
-			if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
+			if (filesList.length > 0) processFilePath(filesList[0].filePath);
 		}
 	}
+	let index;
 </script>
 
 <!-- 
-<div class="flex justify-between">
+<div class="flex justify-between">0
 	<img class="m-1 h-16 mt-2" src="tangoLibreLogoSquareTransparent.png" alt="logo" />
 	<div class="w-full">
 		<p class="m-5 text-3xl font-bold text-center text-orange-600">Volltext Suche</p>
@@ -199,6 +198,18 @@
 			{/if}
 		</div>
 	{/if}
+</div>
+
+<div class="p-4">
+	<select
+		class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+		bind:value={currentFile}
+		on:change={processFilePath(currentFile.filePath)}
+	>
+		{#each filesList as file (file.filePath)}
+			<option value={file}>{file.fileName}</option>
+		{/each}
+	</select>
 </div>
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2">
