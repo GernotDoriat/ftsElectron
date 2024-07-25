@@ -26,8 +26,8 @@
 	$: filesList = [];
 	$: filesListIndex = 0;
 
-	function reset() {
-		console.warn("reset");
+	function clear() {
+		console.warn("clear");
 		currentSelection = undefined;
 		text1 = "";
 		text2 = "";
@@ -36,13 +36,14 @@
 	}
 
 	async function processFilePath(filePath) {
-		reset();
+		clear();
 		console.log("processFilePath", filePath);
 		let result = await window.ipcElectron.invoke("extract-text", filePath);
 		processText(result.text);
 	}
 
 	function searchTextChange() {
+		ListStore.clear();
 		processFilePath(filesList[filesListIndex].filePath);
 	}
 
@@ -104,6 +105,7 @@
 	function setItem() {
 		console.warn(`setItem "${currentSelection}"`);
 		ListStore.setItem(filesList[filesListIndex].filePath, searchText, getKeyOffset(), currentSelection);
+		showParts();
 	}
 	function save() {
 		window.ipcElectron.invoke("write-csv", ListStore.getCsv(), ListStore.getFileName());

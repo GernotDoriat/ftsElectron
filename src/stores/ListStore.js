@@ -17,9 +17,10 @@ function createStore() {
     return {
         subscribe,
         set,
-        reset: () => {
+        clear: () => {
+            storeContent = []
             update(store => {
-                store = []
+                store = storeContent
                 return store
             })
         },
