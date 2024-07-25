@@ -44,10 +44,10 @@
 
 	function searchTextChange() {
 		ListStore.clear();
-		processFilePath(filesList[filesListIndex].filePath);
+		if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
 	}
 
-	let searchText = undefined;
+	let searchText = "";
 	$: text1 = "";
 	$: text2 = "";
 
@@ -131,6 +131,10 @@
 		if (result.success) {
 			ListStore.init(result.json);
 			console.log("STORE", $ListStore);
+
+			if (result.json.length > 0 && result.json[0].key) searchText = result.json[0].key;
+			else searchText = "";
+			if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
 		}
 	}
 </script>
