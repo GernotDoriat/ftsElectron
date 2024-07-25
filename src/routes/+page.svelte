@@ -149,13 +149,13 @@
 <div class="flex">
 	<div>
 		<div class="flex gap-1 p-5">
-			<button class="text-xl font-bold bg-sky-500 text-white" on:click={getListStoreData}><Icon id="docImport" /></button>
+			<button class="text-xl font-bold bg-sky-500 text-white rounded-md" on:click={getListStoreData}><Icon id="docImport" /></button>
 		</div>
 	</div>
 	<div>
 		<div class="flex gap-1 p-5">
-			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFolder}><Icon id="folder" /></button>
-			<button class="text-xl font-bold bg-orange-600 text-white" on:click={selectFile}><Icon id="file" /></button>
+			<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={selectFolder}><Icon id="folder" /></button>
+			<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={selectFile}><Icon id="file" /></button>
 		</div>
 	</div>
 
@@ -174,7 +174,7 @@
 	{#if filesList && keyWord}
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if indexOfKeyWord > 0}
-				<button class="text-xl font-bold bg-orange-600 text-white" on:click={moveUp}><Icon id="arrowUp" /></button>
+				<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={moveUp}><Icon id="arrowUp" /></button>
 			{:else}
 				<div class="w-8"></div>
 			{/if}
@@ -184,15 +184,15 @@
 			{/if}
 
 			{#if indexOfKeyWord < parts.length - 2}
-				<button class=" text-xl font-bold bg-orange-600 text-white" on:click={moveDown}> <Icon id="arrowDown" /></button>
+				<button class=" text-xl font-bold bg-orange-600 text-white rounded-md" on:click={moveDown}> <Icon id="arrowDown" /></button>
 			{:else}
 				<div class="w-8"></div>
 			{/if}
 		</div>
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if currentSelection}
-				<button class="text-xl font-bold bg-orange-600 text-white" on:click={setItem}><Icon id="plus" /></button>
-				<button class="text-xl font-bold bg-orange-600 text-white" on:click={save}><Icon id="docUpdate" /></button>
+				<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={setItem}><Icon id="plus" /></button>
+				<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={save}><Icon id="docUpdate" /></button>
 			{:else}
 				<div class="w-8"></div>
 			{/if}
@@ -202,7 +202,7 @@
 
 <div class="p-4">
 	<select
-		class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+		class="bg-gray-50 border border-orange-600 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
 		bind:value={currentFile}
 		on:change={processFilePath(currentFile.filePath)}
 	>
