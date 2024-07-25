@@ -39,6 +39,7 @@
 		clear();
 		console.log("processFilePath", filePath);
 		let result = await window.ipcElectron.invoke("extract-text", filePath);
+		console.log("extract-text", result);
 		processText(result.text);
 	}
 
@@ -55,14 +56,15 @@
 	$: parts = [];
 
 	function processText(text) {
-		{
+		if (text) {
 			// für eine kompakte Ansicht
 			text = text.replace(/(\r\n|\n|\r)/gm, " ");
 			// CSV
 			text = text.replace(/(;)/gm, ",");
 			parts = text.split(keyWord);
+			console.log("parts", parts);
 			if (keyWord && parts.length > 1) showParts();
-		}
+		} else console.error("processText: text EMPTY");
 	}
 	let textarea2;
 	function showParts() {
@@ -112,14 +114,14 @@
 	}
 
 	async function selectFolder() {
-		let result = await window.ipcElectron.invoke("selectFolder");
+		let result = await window.ipcElectron.invoke("selectFolder", keyWord);
 		console.warn("selectFolder", result);
 		filesList = [...result.files];
 	}
 	async function selectFile() {
 		let result = await window.ipcElectron.invoke("selectFile");
 		console.warn("selectFile", result);
-		if (result.success) {
+		if (result.success && !filesList.find((o) => o.filePath == result.file.filePath)) {
 			filesList = [...filesList, result.file];
 			currentFile = filesList[filesList.length - 1];
 			processFilePath(currentFile.filePath);
@@ -136,7 +138,6 @@
 			if (filesList.length > 0) processFilePath(filesList[0].filePath);
 		}
 	}
-	let index;
 </script>
 
 <!-- 

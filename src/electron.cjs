@@ -129,14 +129,15 @@ ipcMain.handle('write-csv', (event, content, fileName) => {
 	}
 })
 
-ipcMain.handle('selectFolder', async (event) => {
+ipcMain.handle('selectFolder', async (event, keyWord) => {
 	try {
+		console.log(`selectFolder '${keyWord}'`)
 		let selectedDirPath = await dialog.showOpenDialog({ properties: ['openDirectory'] })
 		console.log('selectedDirPath', selectedDirPath)
 		let filePathes = await getFilePathes(selectedDirPath.filePaths[0])
 		let files = []
 		for (const filePath of filePathes) {
-			if (await isValid(filePath))
+			if (await isValid(filePath, keyWord))
 				files.push({ filePath: filePath, fileName: path.basename(filePath) })
 		}
 		return { success: true, files: files }
@@ -183,7 +184,7 @@ async function extractText(filePath) {
 		//console.log('Extractor:', extractor)
 		const text = await extractor.extractText({ input: fileBuffer, type: 'buffer' })
 		//console.log('Extracted text:', text)
-		return { success: true, text }
+		return { success: true, text: text }
 	} catch (error) {
 		console.error('Error extracting text:', error)
 		return { success: false, error: error.message }
@@ -192,9 +193,17 @@ async function extractText(filePath) {
 }
 
 
-async function isValid(filePath) {
+async function isValid(filePath, keyWord) {
+	console.log(`isValid '${keyWord}' '${filePath}'`)
 	let extractResult = await extractText(filePath)
-	return extractResult.success
+	if (extractResult.success) {
+		if (keyWord) {
+			let index = extractResult.text.indexOf(keyWord)
+			console.log(`indexOf ${keyWord} = ${index}`)
+			return index > -1
+		}
+		return true
+	}
 }
 
 function doParse(csvText) {
