@@ -69,7 +69,7 @@
 		console.warn(`showParts indexOfSearch = ${indexOfKeyWord}`);
 		text1 = parts[indexOfKeyWord];
 		text2 = parts[indexOfKeyWord + 1];
-		let item = ListStore.getItem(filesList[filesListIndex].filePath, keyWord, getKeyOffset());
+		let item = ListStore.getItem(filesList[filesListIndex].fileName, keyWord, getKeyOffset());
 		//console.warn("ListStore.getItem", item);
 		if (item) {
 			//console.warn("item.keyValue", item.keyValue.length, item.keyValue);
@@ -104,7 +104,7 @@
 
 	function setItem() {
 		console.warn(`setItem "${currentSelection}"`);
-		ListStore.setItem(filesList[filesListIndex].filePath, keyWord, getKeyOffset(), currentSelection);
+		ListStore.setItem(filesList[filesListIndex].fileName, keyWord, getKeyOffset(), currentSelection);
 		showParts();
 	}
 	function save() {
