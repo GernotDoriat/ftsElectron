@@ -113,26 +113,7 @@ ipcMain.on('to-main', (event, count) => {
 
 
 ipcMain.handle('extract-text', async (event, filePath) => {
-	try {
-		const { getTextExtractor } = await import('office-text-extractor')
-		const fileBuffer = await fs.readFile(filePath)
-		//console.log('File buffer:', fileBuffer)
-
-		// Testen Sie die Struktur des Extraktors
-		const extractor = getTextExtractor(fileBuffer)
-		//console.log('Extractor:', extractor)
-
-		if (typeof extractor.extractText !== 'function') {
-			throw new Error('extractText is not a function')
-		}
-
-		const text = await extractor.extractText({ input: fileBuffer, type: 'buffer' })
-		//console.log('Extracted text:', text)
-		return { success: true, text }
-	} catch (error) {
-		console.error('Error extracting text:', error)
-		return { success: false, error: error.message }
-	}
+	return extractText(filePath)
 })
 
 
@@ -155,7 +136,8 @@ ipcMain.handle('selectFolder', async (event) => {
 		let filePathes = await getFilePathes(selectedDirPath.filePaths[0])
 		let files = []
 		for (const filePath of filePathes) {
-			files.push({ filePath: filePath, fileName: path.basename(filePath) })
+			if (await isValid(filePath))
+				files.push({ filePath: filePath, fileName: path.basename(filePath) })
 		}
 		return { success: true, files: files }
 
@@ -188,6 +170,32 @@ ipcMain.handle('getListStoreData', async (event) => {
 	}
 })
 
+
+
+async function extractText(filePath) {
+	try {
+		console.log(`extractText '${filePath}'`)
+		const { getTextExtractor } = await import('office-text-extractor')
+		const fileBuffer = await fs.readFile(filePath)
+		//console.log('File buffer:', fileBuffer)
+		// Testen Sie die Struktur des Extraktors
+		const extractor = getTextExtractor(fileBuffer)
+		//console.log('Extractor:', extractor)
+		const text = await extractor.extractText({ input: fileBuffer, type: 'buffer' })
+		//console.log('Extracted text:', text)
+		return { success: true, text }
+	} catch (error) {
+		console.error('Error extracting text:', error)
+		return { success: false, error: error.message }
+	}
+
+}
+
+
+async function isValid(filePath) {
+	let extractResult = await extractText(filePath)
+	return extractResult.success
+}
 
 function doParse(csvText) {
 	// Parse local CSV file
