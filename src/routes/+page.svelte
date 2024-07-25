@@ -111,9 +111,10 @@
 		window.ipcElectron.invoke("write-csv", ListStore.getCsv(), ListStore.getFileName());
 	}
 
-	function selectFolder() {
-		let files = window.ipcElectron.invoke("selectFolder");
-		console.warn("selectFolder", files);
+	async function selectFolder() {
+		let result = await window.ipcElectron.invoke("selectFolder");
+		console.warn("selectFolder", result);
+		filesList = [...result.files];
 	}
 	async function selectFile() {
 		let result = await window.ipcElectron.invoke("selectFile");
