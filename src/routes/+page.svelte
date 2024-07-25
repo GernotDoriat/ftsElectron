@@ -42,7 +42,7 @@
 		processText(result.text);
 	}
 
-	function searchTextChange() {
+	function inputSearchTextChange() {
 		ListStore.clear();
 		if (filesList.length > 0) processFilePath(filesList[filesListIndex].filePath);
 	}
@@ -167,7 +167,7 @@
 				type="text"
 				placeholder="Suchbegriff eingeben oder einsetzen..."
 				bind:value={searchText}
-				on:input={searchTextChange}
+				on:input={inputSearchTextChange}
 			/>
 		</div>
 	</div>
