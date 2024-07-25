@@ -61,6 +61,11 @@ function createStore() {
             return csv
 
         },
+        getFileName: () => {
+            if (storeContent.length > 0)
+                return storeContent[0].key
+            return 'gaga'
+        },
 
     }
 }

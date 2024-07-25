@@ -106,7 +106,7 @@
 		ListStore.setItem(filesList[filesListIndex].filePath, searchText, getKeyOffset(), currentSelection);
 	}
 	function save() {
-		window.ipcElectron.invoke("write-csv", ListStore.getCsv());
+		window.ipcElectron.invoke("write-csv", ListStore.getCsv(), ListStore.getFileName());
 	}
 
 	function selectFolder() {
