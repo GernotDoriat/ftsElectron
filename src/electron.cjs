@@ -67,11 +67,11 @@ contextMenu({
 	showLookUpSelection: false,
 	showSearchWithGoogle: false,
 	showCopyImage: false,
-	prepend: (defaultActions, params, browserWindow) => [
+	/* prepend: (defaultActions, params, browserWindow) => [
 		{
 			label: 'Make App 💻',
 		},
-	],
+	], */
 })
 
 function loadVite(port) {
