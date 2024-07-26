@@ -148,27 +148,7 @@
 		}
 	}
 
-	let timer = undefined;
-	function startBusy() {
-		let msecs = 0;
-		busy = true;
-		timer = setInterval(() => {
-			msecs += 100;
-			busyText = `${(msecs / 1000).toFixed(2)}`;
-		}, 100);
-	}
-	function stopBusy() {
-		clearInterval(timer);
-		busyText = "";
-		busy = false;
-	}
-
-	function doTest() {
-		UiStore.setBusy();
-		setTimeout(() => {
-			UiStore.clearBusy();
-		}, 2000);
-	}
+	function doTest() {}
 </script>
 
 <!-- 
