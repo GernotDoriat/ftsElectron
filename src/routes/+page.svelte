@@ -1,7 +1,6 @@
 <script>
 	import { onMount } from "svelte";
 	import Icon from "../components/Icon.svelte";
-	import BusyOverlay from "../components/BusyOverlay.svelte";
 	import { ListStore } from "../stores/ListStore";
 	import { UiStore } from "../stores/UiStore";
 
@@ -170,9 +169,6 @@
 			UiStore.clearBusy();
 		}, 2000);
 	}
-
-	let busy = false;
-	let busyText = "";
 </script>
 
 <!-- 
@@ -265,10 +261,6 @@
 		<textarea id="textarea2" style="resize: none;" class="h-full w-full focus:outline-0">{text2}</textarea>
 	</div>
 </div>
-
-{#if busy}
-	<BusyOverlay>{busyText}</BusyOverlay>
-{/if}
 
 <style lang="postcss">
 	:global(html) {
