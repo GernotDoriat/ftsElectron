@@ -20,8 +20,13 @@
 	}
 	$: currentSelection = undefined;
 	function logSelection(event) {
-		currentSelection = event.target.value.substring(event.target.selectionStart, event.target.selectionEnd);
-		console.log(`SEL "${currentSelection}"`);
+		if (event.target.id == "textarea2") currentSelection = event.target.value.substring(event.target.selectionStart, event.target.selectionEnd);
+		else {
+			let el = document.getElementById(event.target.id);
+			el.selectionStart = 0;
+			el.selectionEnd = 0;
+		}
+		console.log(`SEL "${currentSelection}" ${event.target.id}`);
 	}
 
 	$: filesList = [];
@@ -228,7 +233,7 @@
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2">
 	<div class=" w-full h-40 overflow-y-scroll">
-		<textarea style="resize: none;" class="h-full w-full focus:outline-0">{text1}</textarea>
+		<textarea id="textarea1" style="resize: none;select: none" class="h-full w-full focus:outline-0">{text1}</textarea>
 	</div>
 
 	<div class="text-center w-full text-orange-600">
