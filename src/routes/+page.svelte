@@ -1,7 +1,9 @@
 <script>
 	import { onMount } from "svelte";
 	import Icon from "../components/Icon.svelte";
+	import BusyOverlay from "../components/BusyOverlay.svelte";
 	import { ListStore } from "../stores/ListStore";
+	import { UiStore } from "../stores/UiStore";
 
 	onMount(init);
 	function init() {
@@ -114,9 +116,17 @@
 	}
 
 	async function selectFolder() {
-		let result = await window.ipcElectron.invoke("selectFolder", keyWord);
+		/* let result = await window.ipcElectron.invoke("selectFolder", keyWord);
 		console.warn("selectFolder", result);
-		filesList = [...result.files];
+		filesList = [...result.files]; */
+
+		let result1 = await window.ipcElectron.invoke("selectFolder");
+		console.warn("selectFolder", result1);
+		UiStore.setBusy();
+		let result2 = await window.ipcElectron.invoke("processFolder", result1.selectedDirPath, keyWord);
+		UiStore.clearBusy();
+		console.warn("processFolder", result2);
+		filesList = [...result2.files];
 	}
 	async function selectFile() {
 		let result = await window.ipcElectron.invoke("selectFile");
@@ -138,6 +148,31 @@
 			if (filesList.length > 0) processFilePath(filesList[0].filePath);
 		}
 	}
+
+	let timer = undefined;
+	function startBusy() {
+		let msecs = 0;
+		busy = true;
+		timer = setInterval(() => {
+			msecs += 100;
+			busyText = `${(msecs / 1000).toFixed(2)}`;
+		}, 100);
+	}
+	function stopBusy() {
+		clearInterval(timer);
+		busyText = "";
+		busy = false;
+	}
+
+	function doTest() {
+		UiStore.setBusy();
+		setTimeout(() => {
+			UiStore.clearBusy();
+		}, 2000);
+	}
+
+	let busy = false;
+	let busyText = "";
 </script>
 
 <!-- 
@@ -156,8 +191,8 @@
 	</div>
 	<div>
 		<div class="flex gap-1 p-5">
-			<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={selectFolder}><Icon id="folder" /></button>
-			<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={selectFile}><Icon id="file" /></button>
+			<button class="text-xl font-bold bg-orange-500 text-white rounded-md" on:click={selectFolder}><Icon id="folder" /></button>
+			<button class="text-xl font-bold bg-orange-500 text-white rounded-md" on:click={selectFile}><Icon id="file" /></button>
 		</div>
 	</div>
 
@@ -194,7 +229,7 @@
 		<div class="mx-2 my-3 h-10 flex gap-2">
 			{#if currentSelection}
 				<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={setItem}><Icon id="plus" /></button>
-				<button class="text-xl font-bold bg-orange-600 text-white rounded-md" on:click={save}><Icon id="docUpdate" /></button>
+				<button class="text-xl font-bold bg-sky-500 text-white rounded-md" on:click={save}><Icon id="docExport" /></button>
 			{:else}
 				<div class="w-8"></div>
 			{/if}
@@ -202,7 +237,7 @@
 	{/if}
 </div>
 
-<div class="p-4">
+<div class="flex gap-2 p-4">
 	<select
 		class="bg-gray-50 border border-orange-600 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
 		bind:value={currentFile}
@@ -212,6 +247,7 @@
 			<option value={file}>{file.fileName}</option>
 		{/each}
 	</select>
+	<button class="px-2 text-xl font-bold bg-yellow-500 text-white rounded-md" on:click={doTest}>TEST</button>
 </div>
 
 <div class="absolute left-2 bottom-2 right-2 p-1 border-2">
@@ -229,6 +265,10 @@
 		<textarea id="textarea2" style="resize: none;" class="h-full w-full focus:outline-0">{text2}</textarea>
 	</div>
 </div>
+
+{#if busy}
+	<BusyOverlay>{busyText}</BusyOverlay>
+{/if}
 
 <style lang="postcss">
 	:global(html) {

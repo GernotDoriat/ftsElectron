@@ -8,9 +8,6 @@ const fs = require('fs').promises
 const Papa = require('papaparse')
 
 
-
-
-
 try {
 	require('electron-reloader')(module)
 } catch (e) {
@@ -129,7 +126,7 @@ ipcMain.handle('write-csv', (event, content, fileName) => {
 	}
 })
 
-ipcMain.handle('selectFolder', async (event, keyWord) => {
+ipcMain.handle('selectFolderV0', async (event, keyWord) => {
 	try {
 		console.log(`selectFolder '${keyWord}'`)
 		let selectedDirPath = await dialog.showOpenDialog({ properties: ['openDirectory'] })
@@ -147,6 +144,39 @@ ipcMain.handle('selectFolder', async (event, keyWord) => {
 		return { success: false, error: error.message }
 	}
 })
+
+ipcMain.handle('selectFolder', async (event) => {
+	try {
+		console.log(`selectFolder`)
+		let selectedDirPath = await dialog.showOpenDialog({ properties: ['openDirectory'] })
+		console.log('selectedDirPath', selectedDirPath)
+		return { success: true, selectedDirPath: selectedDirPath.filePaths[0] }
+	} catch (error) {
+		console.error('Error:', error)
+		return { success: false, error: error.message }
+	}
+})
+
+
+ipcMain.handle('processFolder', async (event, selectedDirPath, keyWord) => {
+	try {
+		console.log(`processFolder '${selectedDirPath}' '${keyWord}'`)
+		let filePathes = await getFilePathes(selectedDirPath)
+		let files = []
+		for (const filePath of filePathes) {
+			if (await isValid(filePath, keyWord))
+				files.push({ filePath: filePath, fileName: path.basename(filePath) })
+		}
+		return { success: true, files: files }
+
+	} catch (error) {
+		console.error('Error:', error)
+		return { success: false, error: error.message }
+	}
+})
+
+
+
 
 ipcMain.handle('selectFile', async (event) => {
 	try {
